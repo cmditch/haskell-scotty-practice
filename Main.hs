@@ -10,12 +10,11 @@ import           Web.Scotty
 main :: IO ()
 main = do
   allRows <- DB.allRows
+  let dbData = mconcat (displayRow <$> allRows)
   scotty 3000 $ do
     get "/:word" $ do
-      someWord' <- param "word" :: ActionM Text
-      let someWord = ["<p>", someWord', "</p>"]
-      let dbData = displayRow <$> allRows
-      html $ mconcat (someWord <> dbData)
+      someWord <- param "word" :: ActionM Text
+      html (p someWord <> dbData)
 
 
 displayRow :: (Int, String, String) -> Text
